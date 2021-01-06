@@ -1,4 +1,4 @@
-[![check-new-commits-action status](https://github.com/adriangl/check-new-commits-action/workflows/unit-tests/badge.svg)](https://github.com/adriangl/check-new-commits-action/actions)
+[![check-new-commits-action status](https://github.com/adriangl/check-new-commits-action/workflows/Unit%20testing/badge.svg)](https://github.com/adriangl/check-new-commits-action/actions)
 
 # Check new commits action
 
