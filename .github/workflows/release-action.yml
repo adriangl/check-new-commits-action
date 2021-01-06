@@ -62,6 +62,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: master
         tags: true
+        force: true
     - name: 📝 Create changelog for GitHub release
       run: |
         # We first need to remove the header text, and then process it with rexreplace to obtain a proper release changelog
