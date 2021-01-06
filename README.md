@@ -8,6 +8,7 @@ This action checks if new commits have been added to a branch in an specified ti
 
 ```yaml
 - name: Check for new commits today
+  id: check-new-commits
   uses: adriangl/check-new-commits-action@v1
   with:
     token: 'your_github_token'
