@@ -1,0 +1,3 @@
+# Marks the files under dist folder as generated, therefore not acknowledging them in diffs and language counters in GitHub.
+# Check https://github.com/github/linguist#overrides for details.
+dist/** -diff linguist-generated=true 

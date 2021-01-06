@@ -1,0 +1,74 @@
+{
+  "name": "check-new-commits",
+  "version": "1.0.0",
+  "description": "GitHub action that checks if there has been any new commit in a given time frame",
+  "main": "lib/main.js",
+  "scripts": {
+    "postinstall": "npx husky install",
+    "act": "act -j action-tests --secret-file .secrets --env-file .env",
+    "clean": "rm -rf lib/*",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint **/*.ts",
+    "build": "tsc",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "jest",
+    "all": "npm run clean && npm run build && npm run format && npm run lint && npm run package && npm test",
+    "release": "standard-version",
+    "postversion": "git push --follow-tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriangl/check-new-commits-action.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "TypeScript"
+  ],
+  "author": "Adrián García",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adriangl/check-new-commits-action/issues"
+  },
+  "homepage": "https://github.com/adriangl/check-new-commits-action#readme",
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "standard-version": {
+    "scripts": {
+      "posttag": "TAG=$(git describe --tags --abbrev=0); MAJOR_TAG=${TAG%%.*}; git tag -f $MAJOR_TAG"
+    }
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.5",
+    "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "@vercel/ncc": "^0.26.1",
+    "eslint": "^7.17.0",
+    "eslint-plugin-deprecation": "^1.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "husky": "^4.3.6",
+    "jest": "^26.6.3",
+    "jest-circus": "^26.6.3",
+    "lint-staged": "^10.5.3",
+    "pinst": "^2.1.1",
+    "prettier": "^2.2.1",
+    "standard-version": "^9.1.0",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.3"
+  }
+}

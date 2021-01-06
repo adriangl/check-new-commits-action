@@ -1,0 +1,33 @@
+name: 'Check new commits'
+description: 'Checks if the given branch has new commits since a given time period'
+inputs:
+  token:
+    description: > 
+      Access token used to access the GitHub API.
+      It is recommended to create a Personal Access Token with a limited access to repositories in order for this to work.
+    required: true
+    default: ${{ github.token }}
+  seconds: 
+    description: > 
+      The seconds interval that the action will use to check if there have been new commits.
+    required: true
+    default: '86400' # One day
+  branch:
+    description: >
+      The branch to check for new commits.
+      When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.
+      Otherwise, uses the default branch.
+    required: false
+outputs:
+  has-new-commits:
+    description: > 
+      Whether or not new commits have been found for the required time interval as a boolean value (true or false).
+  new-commits-number:
+    description: > 
+      The number of new commits found for the given interval. It will be 0 if no new commits could be found.
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'git-branch'
+  color: 'orange'

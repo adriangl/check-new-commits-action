@@ -1,0 +1,47 @@
+name: Unit testing
+
+on:
+  pull_request:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  cancel-previous-runs:
+    name: Cancel previous runs
+    runs-on: ubuntu-latest
+    steps:
+    - name: ⏹ Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.6.0
+      with:
+        access_token: ${{ secrets.GITHUB_TOKEN }}
+  
+  unit-tests:
+    name: Run unit tests in the project
+    runs-on: ubuntu-latest
+    steps:
+    - name: 💻 Checkout
+      uses: actions/checkout@v2
+    - name: 🔨 Read .nvmrc
+      id: read_nvmrc
+      run: |
+        echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+    - name: 🔨 Setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ steps.read_nvmrc.outputs.NODE_VERSION }}
+    - name: 🔨 Get npm cache directory
+      id: npm-cache
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+    - name: 🔨 Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.npm-cache.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: 🚧 Install dependencies
+      run: npm ci
+    - name: 🔄 Run tests
+      run: npm test

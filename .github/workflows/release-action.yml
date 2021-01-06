@@ -1,0 +1,80 @@
+name: Release Action version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cancel-previous-runs:
+    name: Cancel previous runs
+    runs-on: ubuntu-latest
+    steps:
+    - name: ⏹ Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.6.0
+      with:
+        access_token: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    name: Create a release of the action
+    runs-on: ubuntu-latest
+    steps:
+    - name: 💻 Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: master
+        fetch-depth: 0
+    - name: 🔨 Read .nvmrc
+      id: read_nvmrc
+      run: |
+        echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+    - name: 🔨 Setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ steps.read_nvmrc.outputs.NODE_VERSION }}
+    - name: 🔨 Get npm cache directory
+      id: npm-cache
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+    - name: 🔨 Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.npm-cache.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: 🚧 Install dependencies
+      run: npm ci
+    - name: 📦 Package the binary release
+      run: npm run all
+    - name: 🏷 Create the binary release metadata
+      id: create-tags
+      run: |
+        # We use the e-mail mentioned here: https://github.community/t/github-actions-bot-email-address/17204/6
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config user.name "github-actions"
+
+        npm run release
+
+        TAG=$(git describe --tags --abbrev=0) # Works since vX.Y.Z tags are annotated and won't pick the vX tags, which are not
+        echo ::set-output name=tag::"${TAG}" # saved as output of the step
+    - name: ⏫ Push changes to GitHub
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
+        tags: true
+    - name: 📝 Create changelog for GitHub release
+      run: |
+        # We first need to remove the header text, and then process it with rexreplace to obtain a proper release changelog
+        # Reference: https://github.com/conventional-changelog/standard-version/issues/568
+        tail -n +5 CHANGELOG.md | npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o > CHANGELOG-LATEST.md
+    - name: 🚀 Create a release in GitHub
+      id: create-gh-release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.create-tags.outputs.tag }}
+        release_name: ${{ steps.create-tags.outputs.tag }}
+        body_path: CHANGELOG-LATEST.md
+        draft: false
+        prerelease: false

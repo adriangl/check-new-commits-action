@@ -1,0 +1,34 @@
+name: Action testing
+
+on:
+  pull_request:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  # We need to do different set-ups if we run the job locally using act or being run in GitHub Actions
+  # Check: https://github.com/nektos/act/issues/228 for details
+  action-tests:
+    name: Run the action against the base repo
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🏠 Checkout locally
+      if: ${{ env.ACT }}
+      uses: actions/checkout@v2
+      with:
+        path: check-new-commits-action
+    - name: 💻 Checkout from GitHub
+      if: ${{ !env.ACT }}
+      uses: actions/checkout@v2
+    - name: 🔄 Test the action with currrent repo content
+      id: check-new-commits
+      uses: ./
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
+        seconds: 86400 # one day
+    - if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
+      run: echo "You have ${{ steps.check-new-commits.outputs.new-commits-number }} new commit(s) ✅!"
+    - if: ${{ steps.check-new-commits.outputs.has-new-commits != 'true' }}
+      run: echo "You don't have new commits 🛑!"
