@@ -27,7 +27,7 @@ jobs:
       run: |
         echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
     - name: 🔨 Setup node
-      uses: actions/setup-node@v2.2.0
+      uses: actions/setup-node@v2.4.0
       with:
         node-version: ${{ steps.read_nvmrc.outputs.NODE_VERSION }}
     - name: 🔨 Get npm cache directory
