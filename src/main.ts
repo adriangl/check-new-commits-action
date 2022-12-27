@@ -63,7 +63,7 @@ async function _hasNewCommits(
 
     core.info(`Checking commits since ${commitCheckDate.toUTCString()}`)
 
-    const { data: commitIterator } = await octokit.repos.listCommits({
+    const { data: commitIterator } = await octokit.rest.repos.listCommits({
         owner: owner,
         repo: repo,
         sha: branch,
@@ -81,8 +81,8 @@ async function _hasNewCommits(
         const commitInfo = commitData[1]
         core.info(
             `* ${commitInfo.commit.message.trim().split("\n", 1)[0]} by ${
-                commitInfo.commit.author.name
-            } at ${new Date(commitInfo.commit.author.date).toUTCString()}`
+                commitInfo.commit.author?.name ?? ""
+            } at ${new Date(commitInfo.commit.author?.date ?? 0).toUTCString()}`
         )
     }
 

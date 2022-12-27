@@ -10,7 +10,7 @@ import {
 } from "./constants"
 
 export function getInputs(): ActionInputs {
-    const result = ({} as unknown) as ActionInputs
+    const result = {} as unknown as ActionInputs
 
     result.authToken = getAuthToken()
     result.seconds = getSeconds()
