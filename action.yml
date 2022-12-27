@@ -26,7 +26,7 @@ outputs:
     description: > 
       The number of new commits found for the given interval. It will be 0 if no new commits could be found.
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: 'git-branch'
