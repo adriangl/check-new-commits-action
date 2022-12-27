@@ -1,6 +1,6 @@
 {
   "name": "check-new-commits",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "GitHub action that checks if there has been any new commit in a given time frame",
   "main": "lib/main.js",
   "scripts": {
