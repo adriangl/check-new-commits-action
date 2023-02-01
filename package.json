@@ -59,7 +59,7 @@
     "@vercel/ncc": "^0.28.6",
     "eslint": "^7.32.0",
     "eslint-plugin-deprecation": "^1.2.1",
-    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jest": "^24.3.6",
     "husky": "^4.3.8",
     "jest": "^26.6.3",
