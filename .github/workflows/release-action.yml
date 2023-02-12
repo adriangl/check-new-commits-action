@@ -55,7 +55,7 @@ jobs:
         npm run release
 
         TAG=$(git describe --tags --abbrev=0) # Works since vX.Y.Z tags are annotated and won't pick the vX tags, which are not
-        echo "tag="${TAG}" >> $GITHUB_OUTPUT # saved as output of the step
+        echo "tag=${TAG}" >> $GITHUB_OUTPUT # saved as output of the step
     - name: ⏫ Push changes to GitHub
       uses: ad-m/github-push-action@v0.6.0
       with:
