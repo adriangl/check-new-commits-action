@@ -58,6 +58,16 @@ npm install
 nvm use
 ```
 
+* Check packages to upgrade with:
+```shell
+npx ncu
+```
+
+* Update packages with:
+```shell
+npm update
+```
+
 * When you add new features, build the TypeScript code:
 ```bash
 npm run build

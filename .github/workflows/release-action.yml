@@ -25,7 +25,7 @@ jobs:
     - name: 🔨 Read .nvmrc
       id: read_nvmrc
       run: |
-        echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+        echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_OUTPUT
     - name: 🔨 Setup node
       uses: actions/setup-node@v3.5.1
       with:
@@ -33,7 +33,7 @@ jobs:
     - name: 🔨 Get npm cache directory
       id: npm-cache
       run: |
-        echo "::set-output name=dir::$(npm config get cache)"
+        echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
     - name: 🔨 Cache dependencies
       uses: actions/cache@v3.0.11
       with:
@@ -55,7 +55,7 @@ jobs:
         npm run release
 
         TAG=$(git describe --tags --abbrev=0) # Works since vX.Y.Z tags are annotated and won't pick the vX tags, which are not
-        echo ::set-output name=tag::"${TAG}" # saved as output of the step
+        echo "tag="${TAG}" >> $GITHUB_OUTPUT # saved as output of the step
     - name: ⏫ Push changes to GitHub
       uses: ad-m/github-push-action@v0.6.0
       with:
