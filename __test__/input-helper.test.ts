@@ -6,6 +6,7 @@ import { ActionInputs } from "../src/action-inputs"
 import { INPUT_BRANCH } from "../src/constants"
 
 // Inputs for mock @actions/core
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 let inputs = {} as any
 
 // Shallow clone original @actions/github context

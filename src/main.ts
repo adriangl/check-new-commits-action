@@ -17,13 +17,13 @@ async function run(): Promise<void> {
             inputs.seconds,
             owner,
             repo,
-            inputs.branch
+            inputs.branch,
         )
 
         core.setOutput(OUTPUT_HAS_NEW_COMMITS, hasNewCommitsInfo.hasNewCommits)
         core.setOutput(
             OUTPUT_NEW_COMMITS_NUMBER,
-            hasNewCommitsInfo.newCommitsNumber
+            hasNewCommitsInfo.newCommitsNumber,
         )
     } catch (e: unknown) {
         // Types of stuff caught in a catch clause must be 'unknown' and then be casted to the specific type
@@ -42,7 +42,7 @@ async function _hasNewCommits(
     seconds: number,
     owner: string,
     repo: string,
-    branch: string
+    branch: string,
 ): Promise<CommitsInfo> {
     core.debug("Parameters:")
     core.debug(`authToken = ${authToken}`)
@@ -52,7 +52,7 @@ async function _hasNewCommits(
     core.debug(`branch = ${branch}`)
 
     core.info(
-        `Checking if there has been commits in the last ${seconds} seconds...`
+        `Checking if there has been commits in the last ${seconds} seconds...`,
     )
 
     const currentDate = new Date()
@@ -75,14 +75,14 @@ async function _hasNewCommits(
     const hasNewCommits = commitNumber > 0
 
     core.info(
-        `There has been ${commitNumber} new commit(s) in branch "${branch}" since ${commitCheckDate.toUTCString()}`
+        `There has been ${commitNumber} new commit(s) in branch "${branch}" since ${commitCheckDate.toUTCString()}`,
     )
     for (const commitData of commitList) {
         const commitInfo = commitData[1]
         core.info(
             `* ${commitInfo.commit.message.trim().split("\n", 1)[0]} by ${
                 commitInfo.commit.author?.name ?? ""
-            } at ${new Date(commitInfo.commit.author?.date ?? 0).toUTCString()}`
+            } at ${new Date(commitInfo.commit.author?.date ?? 0).toUTCString()}`,
         )
     }
 
