@@ -15,12 +15,12 @@ jobs:
     steps:
     - name: 🏠 Checkout locally
       if: ${{ env.ACT }}
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: check-new-commits-action
     - name: 💻 Checkout from GitHub
       if: ${{ !env.ACT }}
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: 🔄 Test the action with currrent repo content
       id: check-new-commits
       uses: ./
