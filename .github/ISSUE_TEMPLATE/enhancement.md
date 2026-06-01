@@ -1,10 +1,9 @@
 ---
 name: Enhancement
 about: Create a report to propose new features and improvements
-title: ''
+title: ""
 labels: enhancement
 assignees: adriangl
-
 ---
 
 **Summary and context of the enhancement**

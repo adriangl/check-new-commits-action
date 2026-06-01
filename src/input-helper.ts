@@ -1,13 +1,13 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
-import { ActionInputs } from "./action-inputs"
+import type { ActionInputs } from "./action-inputs.js"
 import {
     INPUT_TOKEN,
     INPUT_SECONDS,
     INPUT_BRANCH,
     REF_HEADS_PREFIX,
     REF_TAGS_PREFIX,
-} from "./constants"
+} from "./constants.js"
 
 export function getInputs(): ActionInputs {
     const result = {} as unknown as ActionInputs
@@ -20,11 +20,22 @@ export function getInputs(): ActionInputs {
 }
 
 function getAuthToken(): string {
-    return core.getInput(INPUT_TOKEN)
+    return core.getInput(INPUT_TOKEN, { required: true })
 }
 
 function getSeconds(): number {
-    return parseInt(core.getInput(INPUT_SECONDS))
+    const seconds = Number.parseInt(
+        core.getInput(INPUT_SECONDS, { required: true }),
+        10,
+    )
+
+    if (Number.isNaN(seconds) || seconds < 0) {
+        throw Error(
+            `The specified ${INPUT_SECONDS} value must be a non-negative integer. Exiting...`,
+        )
+    }
+
+    return seconds
 }
 
 function getBranch(): string {
