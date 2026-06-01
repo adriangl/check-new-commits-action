@@ -1,0 +1,75 @@
+name: Continuous Integration
+
+on:
+    pull_request:
+        branches:
+            - master
+            - "releases/*"
+    push:
+        branches:
+            - master
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    test-typescript:
+        name: TypeScript Tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: 💻 Checkout
+              id: checkout
+              uses: actions/checkout@v6
+
+            - name: 🔨 Setup Node.js
+              id: setup-node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+
+            - name: 🚧 Install dependencies
+              id: npm-ci
+              run: npm ci
+
+            - name: 🎨 Check format
+              id: npm-format-check
+              run: npm run format:check
+
+            - name: 🔍 Lint
+              id: npm-lint
+              run: npm run lint
+
+            - name: 🔄 Run tests
+              id: npm-ci-test
+              run: npm run ci-test
+
+            - name: 📦 Package
+              id: npm-package
+              run: npm run package
+
+    test-action:
+        name: GitHub Actions Test
+        runs-on: ubuntu-latest
+        steps:
+            - name: 💻 Checkout
+              id: checkout
+              uses: actions/checkout@v6
+
+            - name: 🔄 Test local action
+              id: test-action
+              uses: ./
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  branch: master
+                  seconds: 86400
+
+            - name: 📣 Print output
+              id: output
+              run: |
+                  echo "has-new-commits=${{ steps.test-action.outputs.has-new-commits }}"
+                  echo "new-commits-number=${{ steps.test-action.outputs.new-commits-number }}"
