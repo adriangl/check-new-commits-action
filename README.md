@@ -1,4 +1,4 @@
-[![check-new-commits-action status](https://github.com/adriangl/check-new-commits-action/actions/workflows/ci.yml/badge.svg)](https://github.com/adriangl/check-new-commits-action/actions)
+[![check-new-commits-action status](https://github.com/hyperdevs-team/check-new-commits-action/actions/workflows/ci.yml/badge.svg)](https://github.com/hyperdevs-team/check-new-commits-action/actions)
 
 # Check new commits action
 
@@ -9,7 +9,7 @@ This action checks if new commits have been added to a branch in a specified tim
 ```yaml
 - name: Check for new commits today
   id: check-new-commits
-  uses: adriangl/check-new-commits-action@v1
+  uses: hyperdevs-team/check-new-commits-action@v1
   with:
       token: ${{ secrets.GITHUB_TOKEN }}
       seconds: 86400 # One day in seconds
